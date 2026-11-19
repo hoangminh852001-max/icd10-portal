@@ -33,7 +33,6 @@
       min-height: 100vh;
     }
 
-    /* Top Web Navbar */
     .navbar {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
@@ -134,14 +133,12 @@
     }
     .btn-primary:hover { background: var(--primary-hover); }
 
-    /* Main Container */
     .container {
       max-width: 1440px;
       margin: 0 auto;
       padding: 12px 16px 24px;
     }
 
-    /* Search & Filter Strip */
     .toolbar {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -209,7 +206,6 @@
       color: #fff;
     }
 
-    /* 3-Column Workbench */
     .workbench {
       display: grid;
       grid-template-columns: 255px 1fr 340px;
@@ -245,7 +241,6 @@
       align-items: center;
     }
 
-    /* Left Group List */
     .group-list {
       max-height: calc(100vh - 165px);
       overflow-y: auto;
@@ -290,7 +285,6 @@
       color: #fff;
     }
 
-    /* Middle Results */
     .results-scroll {
       max-height: calc(100vh - 165px);
       overflow-y: auto;
@@ -388,7 +382,6 @@
       background: var(--primary-light);
     }
 
-    /* Right Detail Pane */
     .detail-body {
       padding: 12px;
       max-height: calc(100vh - 165px);
@@ -582,66 +575,55 @@
     ];
 
     const ICD_DATA = [
-      // Chấn thương Đầu - Mặt - Cổ
       { code: "S06.0", vi: "Chấn động não", en: "Concussion", group: "trauma_head", note: "Ghi rõ thời gian bất tỉnh nếu có; theo dõi dấu hiệu thần kinh khu trú." },
       { code: "S06.9", vi: "Chấn thương nội sọ, không xác định", en: "Intracranial injury, unspecified", group: "trauma_head", note: "Chỉ định CT sọ não khi có yếu tố nguy cơ hoặc triệu chứng thần kinh." },
       { code: "S02.5", vi: "Gãy răng", en: "Fracture of tooth", group: "trauma_head", note: "Phân biệt gãy men răng/ngà răng hay lộ tủy trên hồ sơ điều trị." },
       { code: "S01.9", vi: "Vết thương hở của đầu, không xác định", en: "Open wound of head, unspecified", group: "trauma_head", note: "Đánh giá kỹ độ sâu vết thương và tình trạng tiêm phòng uốn ván." },
 
-      // Chấn thương Chi trên
       { code: "S42.0", vi: "Gãy xương đòn", en: "Fracture of clavicle", group: "trauma_upper", note: "Lưu ý phân loại gãy kín/gãy hở và tình trạng thần kinh - mạch máu dưới đòn." },
       { code: "S52.5", vi: "Gãy đầu dưới xương quay", en: "Fracture of lower end of radius", group: "trauma_upper", note: "Thường gặp gãy Colles/Smith; đánh giá biên độ sấp ngửa cổ tay và thần kinh giữa." },
       { code: "S52.9", vi: "Gãy xương cẳng tay, không xác định", en: "Fracture of forearm, part unspecified", group: "trauma_upper", note: "Xác định rõ gãy một xương (quay/trụ) hay cả hai xương cẳng tay." },
       { code: "S62.6", vi: "Gãy xương ngón tay khác", en: "Fracture of other finger", group: "trauma_upper", note: "Ghi rõ ngón tay bị tổn thương và biến dạng xoay nếu có." },
       { code: "S43.0", vi: "Trật khớp vai", en: "Dislocation of shoulder joint", group: "trauma_upper", note: "Kiểm tra mạch quay và cảm giác vùng cơ delta trước và sau nắn chỉnh." },
 
-      // Chấn thương Chi dưới
       { code: "S72.0", vi: "Gãy cổ xương đùi", en: "Fracture of neck of femur", group: "trauma_lower", note: "Hay gặp ở người cao tuổi sau trượt ngã; lưu ý biến chứng hoại tử chỏm." },
       { code: "S72.3", vi: "Gãy thân xương đùi", en: "Fracture of shaft of femur", group: "trauma_lower", note: "Tổn thương năng lượng cao; theo dõi mất máu và biến chứng thuyên tắc mỡ." },
       { code: "S82.2", vi: "Gãy thân xương chày", en: "Fracture of shaft of tibia", group: "trauma_lower", note: "Phân biệt gãy kín hay gãy hở; theo dõi sát hội chứng chèn ép khoang cẳng chân." },
       { code: "S82.8", vi: "Gãy các phần khác của cẳng chân", en: "Fracture of other parts of lower leg", group: "trauma_lower", note: "Bao gồm gãy mắt cá/xương mác đơn thuần tùy mô tả chẩn đoán." },
       { code: "S93.4", vi: "Bong gân và căng dây chằng cổ chân", en: "Sprain and strain of ankle", group: "trauma_lower", note: "Loại trừ gãy xương cổ chân/trụ dưới bằng thăm khám và chẩn đoán hình ảnh phù hợp." },
 
-      // Ngực - Bụng - Cột sống
       { code: "S22.3", vi: "Gãy xương sườn", en: "Fracture of rib", group: "trauma_trunk_spine", note: "Đánh giá số lượng xương gãy, mảng sườn di động và biến chứng tràn khí/tràn máu màng phổi." },
       { code: "S27.0", vi: "Tràn khí màng phổi do chấn thương", en: "Traumatic pneumothorax", group: "trauma_trunk_spine", note: "Cấp cứu ngoại khoa; theo dõi hô hấp và dẫn lưu màng phổi khi có chỉ định." },
       { code: "S36.0", vi: "Chấn thương lách", en: "Injury of spleen", group: "trauma_trunk_spine", note: "Theo dõi huyết động sát sao; cân nhắc điều trị bảo tồn hoặc phẫu thuật tùy mức độ." },
       { code: "S32.0", vi: "Gãy đốt sống thắt lưng", en: "Fracture of lumbar vertebra", group: "trauma_trunk_spine", note: "Bất động cột sống đúng tư thế và đánh giá dấu hiệu thần kinh chi dưới." },
 
-      // Đa chấn thương & Bỏng
       { code: "T07", vi: "Đa chấn thương, không xác định", en: "Unspecified multiple injuries", group: "poly_burn", note: "Ưu tiên mã hóa tổn thương nặng/đe dọa tính mạng nhất làm chẩn đoán chính." },
       { code: "T21.1", vi: "Bỏng độ hai ở thân", en: "Burn of second degree of trunk", group: "poly_burn", note: "Ước tính diện tích bỏng (% BSA) và bù dịch theo phác đồ." },
       { code: "T30.0", vi: "Bỏng và ăn mòn, không xác định mức độ", en: "Burn and corrosion, degree unspecified", group: "poly_burn", note: "Nên ghi rõ độ bỏng và vùng cơ thể bị bỏng khi đủ thông tin lâm sàng." },
 
-      // Ngoại Tiêu hóa & Gan mật
       { code: "K35.8", vi: "Viêm ruột thừa cấp, khác và không xác định", en: "Acute appendicitis, other and unspecified", group: "surg_gi", note: "Phân biệt rõ ruột thừa viêm cấp chưa vỡ hay đã vỡ/viêm phúc mạc." },
       { code: "K40.9", vi: "Thoát vị bẹn một bên hoặc không xác định, không có tắc hoặc hoại thư", en: "Unilateral or unspecified inguinal hernia, without obstruction or gangrene", group: "surg_gi", note: "Phân biệt rõ thoát vị nghẹt/tắc ruột (có hoại thư hoặc tắc) khi có chỉ định cấp cứu." },
       { code: "K80.2", vi: "Sỏi túi mật không có viêm túi mật", en: "Calculus of gallbladder without cholecystitis", group: "surg_gi", note: "Đối chiếu siêu âm bụng và triệu chứng lâm sàng (cơn đau quặn mật)." },
       { code: "K56.6", vi: "Tắc ruột khác và không xác định", en: "Other and unspecified intestinal obstruction", group: "surg_gi", note: "Theo dõi dịch - điện giải, sonde dạ dày và chỉ định can thiệp ngoại khoa." },
 
-      // Ngoại Tiết niệu & Nam khoa
       { code: "N20.0", vi: "Sỏi thận", en: "Calculus of kidney", group: "surg_uro", note: "Đánh giá ứ nước thận, chức năng thận và nhiễm trùng tiết niệu kèm theo." },
       { code: "N20.1", vi: "Sỏi niệu quản", en: "Calculus of ureter", group: "surg_uro", note: "Ghi nhận cơn đau quặn thận và mức độ giãn đài bể thận/niệu quản." },
       { code: "N47", vi: "Bao quy đầu dài, hẹp bao quy đầu và nghẹt bao quy đầu", en: "Redundant prepuce, phimosis and paraphimosis", group: "surg_uro", note: "Phân biệt rõ hẹp bao quy đầu đơn thuần hay nghẹt bao quy đầu cấp cứu." },
 
-      // Cơ xương khớp & Cột sống
       { code: "M17.9", vi: "Thoái hóa khớp gối, không xác định", en: "Gonarthrosis, unspecified", group: "msk_spine", note: "Phân biệt thoái hóa khớp gối nguyên phát (M17.1) hay thứ phát sau chấn thương." },
       { code: "M51.1", vi: "Rối loạn đĩa đệm thắt lưng và đĩa đệm khác, có bệnh rễ thần kinh", en: "Lumbar and other intervertebral disc disorders with radiculopathy", group: "msk_spine", note: "Khám kỹ vận động, cảm giác và phản xạ gân xương theo rễ thần kinh." },
       { code: "M54.5", vi: "Đau thắt lưng", en: "Low back pain", group: "msk_spine", note: "Loại trừ các dấu hiệu cờ đỏ (sốt, sụt cân, rối loạn cơ tròn, thiếu hụt thần kinh)." },
 
-      // Nội Tim mạch - Hô hấp - ĐTĐ
       { code: "I10", vi: "Tăng huyết áp vô căn (nguyên phát)", en: "Essential (primary) hypertension", group: "cardio_resp_endo", note: "Mã bệnh mạn tính rất phổ biến trong ngoại trú và giám định BHYT." },
       { code: "I20.9", vi: "Đau thắt ngực, không xác định", en: "Angina pectoris, unspecified", group: "cardio_resp_endo", note: "Đánh giá nhanh ECG và men tim để loại trừ hội chứng vành cấp." },
       { code: "E11.9", vi: "Đái tháo đường typ 2, không có biến chứng", en: "Type 2 diabetes mellitus without complications", group: "cardio_resp_endo", note: "Kiểm tra đường huyết, HbA1c và các biến chứng mạch máu/thận/mắt/thần kinh." },
       { code: "J18.9", vi: "Viêm phổi, không xác định", en: "Pneumonia, unspecified", group: "cardio_resp_endo", note: "Đánh giá mức độ nặng (SpO2, nhịp thở, huyết áp) để phân tầng điều trị." },
       { code: "J45.9", vi: "Hen (suyễn), không xác định", en: "Asthma, unspecified", group: "cardio_resp_endo", note: "Ghi rõ tình trạng cơn cấp hay giai đoạn ổn định/kiểm soát." },
 
-      // Nhiễm trùng & Cấp cứu Nội
       { code: "A90", vi: "Sốt xuất huyết Dengue [sốt Dengue]", en: "Dengue fever [classical dengue]", group: "inf_emerg", note: "Theo dõi tiểu cầu, hematocrit và dấu hiệu cảnh báo giai đoạn nguy hiểm." },
       { code: "A09.9", vi: "Viêm dạ dày và ruột nghi do nhiễm trùng, không xác định", en: "Gastroenteritis and colitis of unspecified origin", group: "inf_emerg", note: "Đánh giá mức độ mất nước và bù dịch điện giải kịp thời." },
       { code: "R50.9", vi: "Sốt, không xác định", en: "Fever, unspecified", group: "inf_emerg", note: "Dùng khi chưa xác định được căn nguyên sốt rõ ràng tại thời điểm khám." },
 
-      // Sản phụ khoa & Nhi khoa
       { code: "O80.0", vi: "Đẻ thường ngôi chỏm", en: "Single spontaneous delivery", group: "ob_peds", note: "Áp dụng cho trường hợp đẻ thường một thai ngôi chỏm không can thiệp phức tạp." },
       { code: "J00", vi: "Viêm mũi họng cấp [cảm lạnh thông thường]", en: "Acute nasopharyngitis [common cold]", group: "ob_peds", note: "Thường gặp ở trẻ nhỏ; phân biệt với viêm tai giữa cấp hoặc viêm phổi." },
       { code: "K59.1", vi: "Tiêu chảy chức năng", en: "Functional diarrhea", group: "ob_peds", note: "Loại trừ nguyên nhân nhiễm trùng cấp và tình trạng mất nước." }
@@ -661,7 +643,7 @@
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         return raw ? JSON.parse(raw) : ["S52.5", "K35.8", "I10", "E11.9"];
-      } catch {
+      } catch (e) {
         return ["S52.5", "K35.8", "I10", "E11.9"];
       }
     }
@@ -669,7 +651,7 @@
     function savePinned() {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state.pinned));
-      } catch {}
+      } catch (e) {}
       document.getElementById("pinCount").textContent = state.pinned.length;
     }
 
@@ -687,7 +669,6 @@
       const cleanQ = stripVietnamese(q.trim());
       if (!cleanQ) return escapeHtml(text);
 
-      // Map normalized index back to original string
       const normChars = [];
       const idxMap = [];
       for (let i = 0; i < text.length; i++) {
@@ -819,7 +800,7 @@
               <tr>
                 <th style="width:92px;">Mã ICD</th>
                 <th>Tên bệnh tiếng Việt</th>
-                <th style="width:95px;text-align:right;">Thao tác</th>
+                <th style="width:75px;text-align:right;">Ghim</th>
               </tr>
             </thead>
             <tbody>
@@ -1001,7 +982,6 @@
       }
     }
 
-    // Events
     document.querySelectorAll(".nav-tab").forEach(tab => {
       tab.addEventListener("click", () => {
         document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
@@ -1043,7 +1023,6 @@
 
     document.getElementById("btnExportCsv").addEventListener("click", exportCsv);
 
-    // Init
     savePinned();
     renderAll();
   </script>
