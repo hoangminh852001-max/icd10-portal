@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICD-10 Clinical Portal — Tra cứu nhanh Lâm sàng & Chấn thương</title>
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #0f766e;
+      --primary-hover: #115e59;
+      --primary-light: #f0fdfa;
+      --accent: #b45309;
+      --accent-light: #fffbeb;
+      --danger: #b91c1c;
+      --danger-light: #fef2f2;
+      --shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      min-height: 100vh;
+    }
+
+    /* Top Web Navbar */
+    .navbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      box-shadow: var(--shadow);
+    }
+
+    .navbar-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 16px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      overflow-x: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+
+    .brand-badge {
+      background: var(--primary);
+      color: #fff;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .nav-tab {
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .nav-tab:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .nav-tab.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: #99f6e4;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover { background: var(--surface-2); }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .btn-primary:hover { background: var(--primary-hover); }
+
+    /* Main Container */
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 12px 16px 24px;
+    }
+
+    /* Search & Filter Strip */
+    .toolbar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .search-box {
+      flex: 1 1 280px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 8px 34px 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13.5px;
+      outline: none;
+    }
+
+    .search-box input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+    }
+
+    .clear-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 15px;
+      padding: 2px 6px;
+    }
+
+    .view-toggle {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .view-toggle button {
+      border: none;
+      background: var(--surface);
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .view-toggle button.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* 3-Column Workbench */
+    .workbench {
+      display: grid;
+      grid-template-columns: 255px 1fr 340px;
+      gap: 12px;
+      align-items: start;
+    }
+
+    @media (max-width: 1120px) {
+      .workbench { grid-template-columns: 230px 1fr; }
+      .detail-pane { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 760px) {
+      .workbench { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 10px 12px;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      font-size: 12.5px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Left Group List */
+    .group-list {
+      max-height: calc(100vh - 165px);
+      overflow-y: auto;
+      padding: 6px;
+    }
+
+    .group-item {
+      width: 100%;
+      text-align: left;
+      border: 1px solid transparent;
+      background: transparent;
+      padding: 7px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12.5px;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .group-item:hover { background: var(--surface-2); }
+    .group-item.active {
+      background: var(--primary-light);
+      border-color: #99f6e4;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .count-pill {
+      font-size: 11px;
+      background: #e2e8f0;
+      color: #334155;
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .group-item.active .count-pill {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* Middle Results */
+    .results-scroll {
+      max-height: calc(100vh - 165px);
+      overflow-y: auto;
+    }
+
+    table.icd-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    table.icd-table th {
+      position: sticky;
+      top: 0;
+      background: var(--surface-2);
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11.5px;
+      z-index: 2;
+    }
+
+    table.icd-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    table.icd-table tr {
+      cursor: pointer;
+      transition: background 0.1s ease;
+    }
+
+    table.icd-table tr:hover { background: #f8fafc; }
+    table.icd-table tr.selected { background: var(--primary-light); }
+
+    .code-chip {
+      display: inline-block;
+      background: #ecfeff;
+      color: #0e7490;
+      border: 1px solid #a5f3fc;
+      font-weight: 700;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .code-chip:hover {
+      background: #cffafe;
+    }
+
+    .mini-actions {
+      display: flex;
+      gap: 4px;
+      justify-content: flex-end;
+    }
+
+    .btn-xs {
+      padding: 3px 7px;
+      font-size: 11px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-xs:hover { background: var(--surface-2); }
+    .btn-xs.pinned {
+      background: var(--accent-light);
+      border-color: #fcd34d;
+      color: var(--accent);
+    }
+
+    .cards-grid {
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 8px;
+    }
+
+    .icd-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      background: var(--surface);
+    }
+
+    .icd-card.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    /* Right Detail Pane */
+    .detail-body {
+      padding: 12px;
+      max-height: calc(100vh - 165px);
+      overflow-y: auto;
+      font-size: 13px;
+    }
+
+    .detail-code-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .detail-code-big {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--primary);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .note-box {
+      background: var(--accent-light);
+      border: 1px solid #fde68a;
+      color: #78350f;
+      padding: 9px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      margin: 10px 0;
+    }
+
+    .trauma-box {
+      background: var(--danger-light);
+      border: 1px solid #fecaca;
+      color: #7f1d1d;
+      padding: 9px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      margin: 10px 0;
+    }
+
+    .related-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .guide-view {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      font-size: 13.5px;
+    }
+
+    .guide-view h3 { margin: 12px 0 6px; color: var(--primary); font-size: 15px; }
+    .guide-view ul { padding-left: 18px; }
+    .guide-view li { margin-bottom: 6px; }
+
+    mark {
+      background: #fef08a;
+      color: inherit;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      background: #0f172a;
+      color: #fff;
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      z-index: 99;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.2s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .empty {
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <div class="brand">
+        <span>ICD-10 Clinical Portal</span>
+        <span class="brand-badge">VN v2</span>
+      </div>
+      <nav class="nav-tabs" id="navTabs">
+        <button class="nav-tab active" data-mode="all">Tra cứu chính</button>
+        <button class="nav-tab" data-mode="surgical">Chấn thương & Ngoại khoa</button>
+        <button class="nav-tab" data-mode="pinned">Mã đã ghim (<span id="pinCount">0</span>)</button>
+        <button class="nav-tab" data-mode="guide">Hướng dẫn mã hóa & BHYT</button>
+      </nav>
+      <div class="nav-actions">
+        <button class="btn" id="btnExportCsv">Xuất CSV</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="toolbar" id="searchToolbar">
+      <div class="search-box">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Gõ mã ICD (S52, K35, I10...), tên bệnh có/không dấu (gay xuong quay, ruot thua...) hoặc tiếng Anh"
+          autocomplete="off"
+        />
+        <button class="clear-btn" id="clearSearch" title="Xóa tìm kiếm">✕</button>
+      </div>
+      <div class="view-toggle">
+        <button id="viewTableBtn" class="active">Bảng gọn</button>
+        <button id="viewCardBtn">Thẻ</button>
+      </div>
+      <span style="font-size:12px;color:var(--muted);" id="resultSummary">Đang tải...</span>
+    </div>
+
+    <div id="guidePanel" class="guide-view" style="display:none;">
+      <h3>Quy tắc mã hóa Chấn thương & Ngoại khoa (Chương XIX — S00–T98)</h3>
+      <ul>
+        <li><strong>Ký tự thập phân gãy xương:</strong> Thường phân biệt <code>.0</code> (gãy kín) và <code>.1</code> (gãy hở) tùy danh mục chi tiết; kiểm tra kỹ mô tả phẫu thuật/vết thương kèm theo.</li>
+        <li><strong>Mã nguyên nhân ngoài (V01–Y98):</strong> Khi mã hóa chấn thương/tai nạn, cần cân nhắc bổ sung nguyên nhân ngoài (tai nạn giao thông, té ngã, bỏng, tác nhân cơ học...) theo quy định thống kê và giám định BHYT.</li>
+        <li><strong>Chẩn đoán chính vs chẩn đoán kèm theo:</strong> Ưu tiên mã tổn thương chi phối chính thời gian nằm viện hoặc can thiệp phẫu thuật chính.</li>
+      </ul>
+      <h3>Mẹo thao tác nhanh</h3>
+      <ul>
+        <li>Bấm trực tiếp vào <strong>mã ICD</strong> để sao chép nhanh mã; bấm <strong>Mã + Tên</strong> ở khung chi tiết để dán vào bệnh án.</li>
+        <li>Bấm <strong>Ghim</strong> để lưu các mã hay dùng vào trình duyệt (<code>localStorage</code>) và xuất danh sách ra file CSV mở được trên Excel tiếng Việt.</li>
+      </ul>
+    </div>
+
+    <div class="workbench" id="workbench">
+      <aside class="panel">
+        <div class="panel-header">
+          <span>Nhóm lâm sàng</span>
+          <button class="btn-xs" id="resetGroupBtn">Tất cả</button>
+        </div>
+        <div class="group-list" id="groupList"></div>
+      </aside>
+
+      <section class="panel">
+        <div class="panel-header">
+          <span id="listTitle">Danh sách mã ICD-10</span>
+          <span id="activeGroupBadge" style="font-size:11.5px;color:var(--primary);"></span>
+        </div>
+        <div class="results-scroll" id="resultsContainer"></div>
+      </section>
+
+      <aside class="panel detail-pane">
+        <div class="panel-header">
+          <span>Chi tiết & Sao chép nhanh</span>
+        </div>
+        <div class="detail-body" id="detailPane"></div>
+      </aside>
+    </div>
+  </main>
+
+  <div class="toast" id="toast">Đã sao chép</div>
+
+  <script>
+    const GROUPS = [
+      { id: "trauma_head", name: "Chấn thương Đầu - Mặt - Cổ", surgical: true },
+      { id: "trauma_upper", name: "Chấn thương Chi trên", surgical: true },
+      { id: "trauma_lower", name: "Chấn thương Chi dưới", surgical: true },
+      { id: "trauma_trunk_spine", name: "Ngực - Bụng - Cột sống", surgical: true },
+      { id: "poly_burn", name: "Đa chấn thương & Bỏng", surgical: true },
+      { id: "surg_gi", name: "Ngoại Tiêu hóa & Gan mật", surgical: true },
+      { id: "surg_uro", name: "Ngoại Tiết niệu & Nam khoa", surgical: true },
+      { id: "msk_spine", name: "Cơ xương khớp & Cột sống", surgical: true },
+      { id: "cardio_resp_endo", name: "Nội Tim mạch - Hô hấp - ĐTĐ", surgical: false },
+      { id: "inf_emerg", name: "Nhiễm trùng & Cấp cứu Nội", surgical: false },
+      { id: "ob_peds", name: "Sản phụ khoa & Nhi khoa", surgical: false }
+    ];
+
+    const ICD_DATA = [
+      // Chấn thương Đầu - Mặt - Cổ
+      { code: "S06.0", vi: "Chấn động não", en: "Concussion", group: "trauma_head", note: "Ghi rõ thời gian bất tỉnh nếu có; theo dõi dấu hiệu thần kinh khu trú." },
+      { code: "S06.9", vi: "Chấn thương nội sọ, không xác định", en: "Intracranial injury, unspecified", group: "trauma_head", note: "Chỉ định CT sọ não khi có yếu tố nguy cơ hoặc triệu chứng thần kinh." },
+      { code: "S02.5", vi: "Gãy răng", en: "Fracture of tooth", group: "trauma_head", note: "Phân biệt gãy men răng/ngà răng hay lộ tủy trên hồ sơ điều trị." },
+      { code: "S01.9", vi: "Vết thương hở của đầu, không xác định", en: "Open wound of head, unspecified", group: "trauma_head", note: "Đánh giá kỹ độ sâu vết thương và tình trạng tiêm phòng uốn ván." },
+
+      // Chấn thương Chi trên
+      { code: "S42.0", vi: "Gãy xương đòn", en: "Fracture of clavicle", group: "trauma_upper", note: "Lưu ý phân loại gãy kín/gãy hở và tình trạng thần kinh - mạch máu dưới đòn." },
+      { code: "S52.5", vi: "Gãy đầu dưới xương quay", en: "Fracture of lower end of radius", group: "trauma_upper", note: "Thường gặp gãy Colles/Smith; đánh giá biên độ sấp ngửa cổ tay và thần kinh giữa." },
+      { code: "S52.9", vi: "Gãy xương cẳng tay, không xác định", en: "Fracture of forearm, part unspecified", group: "trauma_upper", note: "Xác định rõ gãy một xương (quay/trụ) hay cả hai xương cẳng tay." },
+      { code: "S62.6", vi: "Gãy xương ngón tay khác", en: "Fracture of other finger", group: "trauma_upper", note: "Ghi rõ ngón tay bị tổn thương và biến dạng xoay nếu có." },
+      { code: "S43.0", vi: "Trật khớp vai", en: "Dislocation of shoulder joint", group: "trauma_upper", note: "Kiểm tra mạch quay và cảm giác vùng cơ delta trước và sau nắn chỉnh." },
+
+      // Chấn thương Chi dưới
+      { code: "S72.0", vi: "Gãy cổ xương đùi", en: "Fracture of neck of femur", group: "trauma_lower", note: "Hay gặp ở người cao tuổi sau trượt ngã; lưu ý biến chứng hoại tử chỏm." },
+      { code: "S72.3", vi: "Gãy thân xương đùi", en: "Fracture of shaft of femur", group: "trauma_lower", note: "Tổn thương năng lượng cao; theo dõi mất máu và biến chứng thuyên tắc mỡ." },
+      { code: "S82.2", vi: "Gãy thân xương chày", en: "Fracture of shaft of tibia", group: "trauma_lower", note: "Phân biệt gãy kín hay gãy hở; theo dõi sát hội chứng chèn ép khoang cẳng chân." },
+      { code: "S82.8", vi: "Gãy các phần khác của cẳng chân", en: "Fracture of other parts of lower leg", group: "trauma_lower", note: "Bao gồm gãy mắt cá/xương mác đơn thuần tùy mô tả chẩn đoán." },
+      { code: "S93.4", vi: "Bong gân và căng dây chằng cổ chân", en: "Sprain and strain of ankle", group: "trauma_lower", note: "Loại trừ gãy xương cổ chân/trụ dưới bằng thăm khám và chẩn đoán hình ảnh phù hợp." },
+
+      // Ngực - Bụng - Cột sống
+      { code: "S22.3", vi: "Gãy xương sườn", en: "Fracture of rib", group: "trauma_trunk_spine", note: "Đánh giá số lượng xương gãy, mảng sườn di động và biến chứng tràn khí/tràn máu màng phổi." },
+      { code: "S27.0", vi: "Tràn khí màng phổi do chấn thương", en: "Traumatic pneumothorax", group: "trauma_trunk_spine", note: "Cấp cứu ngoại khoa; theo dõi hô hấp và dẫn lưu màng phổi khi có chỉ định." },
+      { code: "S36.0", vi: "Chấn thương lách", en: "Injury of spleen", group: "trauma_trunk_spine", note: "Theo dõi huyết động sát sao; cân nhắc điều trị bảo tồn hoặc phẫu thuật tùy mức độ." },
+      { code: "S32.0", vi: "Gãy đốt sống thắt lưng", en: "Fracture of lumbar vertebra", group: "trauma_trunk_spine", note: "Bất động cột sống đúng tư thế và đánh giá dấu hiệu thần kinh chi dưới." },
+
+      // Đa chấn thương & Bỏng
+      { code: "T07", vi: "Đa chấn thương, không xác định", en: "Unspecified multiple injuries", group: "poly_burn", note: "Ưu tiên mã hóa tổn thương nặng/đe dọa tính mạng nhất làm chẩn đoán chính." },
+      { code: "T21.1", vi: "Bỏng độ hai ở thân", en: "Burn of second degree of trunk", group: "poly_burn", note: "Ước tính diện tích bỏng (% BSA) và bù dịch theo phác đồ." },
+      { code: "T30.0", vi: "Bỏng và ăn mòn, không xác định mức độ", en: "Burn and corrosion, degree unspecified", group: "poly_burn", note: "Nên ghi rõ độ bỏng và vùng cơ thể bị bỏng khi đủ thông tin lâm sàng." },
+
+      // Ngoại Tiêu hóa & Gan mật
+      { code: "K35.8", vi: "Viêm ruột thừa cấp, khác và không xác định", en: "Acute appendicitis, other and unspecified", group: "surg_gi", note: "Phân biệt rõ ruột thừa viêm cấp chưa vỡ hay đã vỡ/viêm phúc mạc." },
+      { code: "K40.9", vi: "Thoát vị bẹn một bên hoặc không xác định, không có tắc hoặc hoại thư", en: "Unilateral or unspecified inguinal hernia, without obstruction or gangrene", group: "surg_gi", note: "Phân biệt rõ thoát vị nghẹt/tắc ruột (có hoại thư hoặc tắc) khi có chỉ định cấp cứu." },
+      { code: "K80.2", vi: "Sỏi túi mật không có viêm túi mật", en: "Calculus of gallbladder without cholecystitis", group: "surg_gi", note: "Đối chiếu siêu âm bụng và triệu chứng lâm sàng (cơn đau quặn mật)." },
+      { code: "K56.6", vi: "Tắc ruột khác và không xác định", en: "Other and unspecified intestinal obstruction", group: "surg_gi", note: "Theo dõi dịch - điện giải, sonde dạ dày và chỉ định can thiệp ngoại khoa." },
+
+      // Ngoại Tiết niệu & Nam khoa
+      { code: "N20.0", vi: "Sỏi thận", en: "Calculus of kidney", group: "surg_uro", note: "Đánh giá ứ nước thận, chức năng thận và nhiễm trùng tiết niệu kèm theo." },
+      { code: "N20.1", vi: "Sỏi niệu quản", en: "Calculus of ureter", group: "surg_uro", note: "Ghi nhận cơn đau quặn thận và mức độ giãn đài bể thận/niệu quản." },
+      { code: "N47", vi: "Bao quy đầu dài, hẹp bao quy đầu và nghẹt bao quy đầu", en: "Redundant prepuce, phimosis and paraphimosis", group: "surg_uro", note: "Phân biệt rõ hẹp bao quy đầu đơn thuần hay nghẹt bao quy đầu cấp cứu." },
+
+      // Cơ xương khớp & Cột sống
+      { code: "M17.9", vi: "Thoái hóa khớp gối, không xác định", en: "Gonarthrosis, unspecified", group: "msk_spine", note: "Phân biệt thoái hóa khớp gối nguyên phát (M17.1) hay thứ phát sau chấn thương." },
+      { code: "M51.1", vi: "Rối loạn đĩa đệm thắt lưng và đĩa đệm khác, có bệnh rễ thần kinh", en: "Lumbar and other intervertebral disc disorders with radiculopathy", group: "msk_spine", note: "Khám kỹ vận động, cảm giác và phản xạ gân xương theo rễ thần kinh." },
+      { code: "M54.5", vi: "Đau thắt lưng", en: "Low back pain", group: "msk_spine", note: "Loại trừ các dấu hiệu cờ đỏ (sốt, sụt cân, rối loạn cơ tròn, thiếu hụt thần kinh)." },
+
+      // Nội Tim mạch - Hô hấp - ĐTĐ
+      { code: "I10", vi: "Tăng huyết áp vô căn (nguyên phát)", en: "Essential (primary) hypertension", group: "cardio_resp_endo", note: "Mã bệnh mạn tính rất phổ biến trong ngoại trú và giám định BHYT." },
+      { code: "I20.9", vi: "Đau thắt ngực, không xác định", en: "Angina pectoris, unspecified", group: "cardio_resp_endo", note: "Đánh giá nhanh ECG và men tim để loại trừ hội chứng vành cấp." },
+      { code: "E11.9", vi: "Đái tháo đường typ 2, không có biến chứng", en: "Type 2 diabetes mellitus without complications", group: "cardio_resp_endo", note: "Kiểm tra đường huyết, HbA1c và các biến chứng mạch máu/thận/mắt/thần kinh." },
+      { code: "J18.9", vi: "Viêm phổi, không xác định", en: "Pneumonia, unspecified", group: "cardio_resp_endo", note: "Đánh giá mức độ nặng (SpO2, nhịp thở, huyết áp) để phân tầng điều trị." },
+      { code: "J45.9", vi: "Hen (suyễn), không xác định", en: "Asthma, unspecified", group: "cardio_resp_endo", note: "Ghi rõ tình trạng cơn cấp hay giai đoạn ổn định/kiểm soát." },
+
+      // Nhiễm trùng & Cấp cứu Nội
+      { code: "A90", vi: "Sốt xuất huyết Dengue [sốt Dengue]", en: "Dengue fever [classical dengue]", group: "inf_emerg", note: "Theo dõi tiểu cầu, hematocrit và dấu hiệu cảnh báo giai đoạn nguy hiểm." },
+      { code: "A09.9", vi: "Viêm dạ dày và ruột nghi do nhiễm trùng, không xác định", en: "Gastroenteritis and colitis of unspecified origin", group: "inf_emerg", note: "Đánh giá mức độ mất nước và bù dịch điện giải kịp thời." },
+      { code: "R50.9", vi: "Sốt, không xác định", en: "Fever, unspecified", group: "inf_emerg", note: "Dùng khi chưa xác định được căn nguyên sốt rõ ràng tại thời điểm khám." },
+
+      // Sản phụ khoa & Nhi khoa
+      { code: "O80.0", vi: "Đẻ thường ngôi chỏm", en: "Single spontaneous delivery", group: "ob_peds", note: "Áp dụng cho trường hợp đẻ thường một thai ngôi chỏm không can thiệp phức tạp." },
+      { code: "J00", vi: "Viêm mũi họng cấp [cảm lạnh thông thường]", en: "Acute nasopharyngitis [common cold]", group: "ob_peds", note: "Thường gặp ở trẻ nhỏ; phân biệt với viêm tai giữa cấp hoặc viêm phổi." },
+      { code: "K59.1", vi: "Tiêu chảy chức năng", en: "Functional diarrhea", group: "ob_peds", note: "Loại trừ nguyên nhân nhiễm trùng cấp và tình trạng mất nước." }
+    ];
+
+    const STORAGE_KEY = "icd10_pinned_v2";
+    let state = {
+      mode: "all",
+      group: "ALL",
+      query: "",
+      view: "table",
+      selectedCode: ICD_DATA[0].code,
+      pinned: loadPinned()
+    };
+
+    function loadPinned() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : ["S52.5", "K35.8", "I10", "E11.9"];
+      } catch {
+        return ["S52.5", "K35.8", "I10", "E11.9"];
+      }
+    }
+
+    function savePinned() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.pinned));
+      } catch {}
+      document.getElementById("pinCount").textContent = state.pinned.length;
+    }
+
+    function stripVietnamese(str = "") {
+      return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "D")
+        .toLowerCase();
+    }
+
+    function highlight(text = "", q = "") {
+      if (!q.trim()) return escapeHtml(text);
+      const cleanQ = stripVietnamese(q.trim());
+      if (!cleanQ) return escapeHtml(text);
+
+      // Map normalized index back to original string
+      const normChars = [];
+      const idxMap = [];
+      for (let i = 0; i < text.length; i++) {
+        const n = stripVietnamese(text[i]);
+        for (let j = 0; j < n.length; j++) {
+          normChars.push(n[j]);
+          idxMap.push(i);
+        }
+      }
+      const normStr = normChars.join("");
+      const pos = normStr.indexOf(cleanQ);
+      if (pos === -1) return escapeHtml(text);
+
+      const start = idxMap[pos];
+      const end = idxMap[pos + cleanQ.length - 1] + 1;
+      return (
+        escapeHtml(text.slice(0, start)) +
+        "<mark>" +
+        escapeHtml(text.slice(start, end)) +
+        "</mark>" +
+        escapeHtml(text.slice(end))
+      );
+    }
+
+    function escapeHtml(str = "") {
+      return String(str)
+        .replace(/&/g, "&")
+        .replace(/</g, "<")
+        .replace(/>/g, ">")
+        .replace(/"/g, """);
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => el.classList.remove("show"), 1700);
+    }
+
+    function copyText(text, label = "Đã sao chép") {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => showToast(`${label}: ${text}`)).catch(() => fallbackCopy(text, label));
+      } else {
+        fallbackCopy(text, label);
+      }
+    }
+
+    function fallbackCopy(text, label) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      showToast(`${label}: ${text}`);
+    }
+
+    function getVisibleGroups() {
+      if (state.mode === "surgical") return GROUPS.filter(g => g.surgical);
+      return GROUPS;
+    }
+
+    function getFilteredItems() {
+      const visibleGroupIds = new Set(getVisibleGroups().map(g => g.id));
+      const q = stripVietnamese(state.query.trim());
+
+      return ICD_DATA.filter(item => {
+        if (!visibleGroupIds.has(item.group)) return false;
+        if (state.mode === "pinned" && !state.pinned.includes(item.code)) return false;
+        if (state.group !== "ALL" && item.group !== state.group) return false;
+        if (!q) return true;
+        const hay = stripVietnamese(`${item.code} ${item.vi} ${item.en}`);
+        return hay.includes(q);
+      });
+    }
+
+    function renderGroups() {
+      const listEl = document.getElementById("groupList");
+      const groups = getVisibleGroups();
+      if (state.group !== "ALL" && !groups.some(g => g.id === state.group)) {
+        state.group = "ALL";
+      }
+
+      const baseItems = state.mode === "pinned"
+        ? ICD_DATA.filter(i => state.pinned.includes(i.code) && groups.some(g => g.id === i.group))
+        : ICD_DATA.filter(i => groups.some(g => g.id === i.group));
+
+      listEl.innerHTML = groups.map(g => {
+        const cnt = baseItems.filter(i => i.group === g.id).length;
+        const active = state.group === g.id ? "active" : "";
+        return `
+          <button class="group-item ${active}" data-group="${g.id}">
+            <span>${escapeHtml(g.name)}</span>
+            <span class="count-pill">${cnt}</span>
+          </button>
+        `;
+      }).join("");
+
+      listEl.querySelectorAll(".group-item").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const gid = btn.dataset.group;
+          state.group = state.group === gid ? "ALL" : gid;
+          renderAll();
+        });
+      });
+
+      const activeGroupObj = GROUPS.find(g => g.id === state.group);
+      document.getElementById("activeGroupBadge").textContent = activeGroupObj ? activeGroupObj.name : "Tất cả nhóm";
+    }
+
+    function renderResults(items) {
+      const container = document.getElementById("resultsContainer");
+      document.getElementById("resultSummary").textContent = `${items.length} mã phù hợp`;
+
+      if (!items.length) {
+        container.innerHTML = `<div class="empty">Không tìm thấy mã ICD phù hợp với bộ lọc hoặc từ khóa hiện tại.</div>`;
+        return;
+      }
+
+      if (!items.some(i => i.code === state.selectedCode)) {
+        state.selectedCode = items[0].code;
+      }
+
+      if (state.view === "table") {
+        container.innerHTML = `
+          <table class="icd-table">
+            <thead>
+              <tr>
+                <th style="width:92px;">Mã ICD</th>
+                <th>Tên bệnh tiếng Việt</th>
+                <th style="width:95px;text-align:right;">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${items.map(item => {
+                const isSel = item.code === state.selectedCode ? "selected" : "";
+                const isPin = state.pinned.includes(item.code);
+                return `
+                  <tr class="${isSel}" data-code="${item.code}">
+                    <td><span class="code-chip" data-copy-code="${item.code}" title="Bấm để copy mã">${highlight(item.code, state.query)}</span></td>
+                    <td>
+                      <div>${highlight(item.vi, state.query)}</div>
+                      <div style="font-size:11px;color:var(--muted);">${highlight(item.en, state.query)}</div>
+                    </td>
+                    <td>
+                      <div class="mini-actions">
+                        <button class="btn-xs ${isPin ? "pinned" : ""}" data-pin="${item.code}" title="Ghim mã">${isPin ? "★" : "☆"}</button>
+                      </div>
+                    </td>
+                  </tr>
+                `;
+              }).join("")}
+            </tbody>
+          </table>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="cards-grid">
+            ${items.map(item => {
+              const isSel = item.code === state.selectedCode ? "selected" : "";
+              const isPin = state.pinned.includes(item.code);
+              return `
+                <div class="icd-card ${isSel}" data-code="${item.code}">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span class="code-chip" data-copy-code="${item.code}">${highlight(item.code, state.query)}</span>
+                    <button class="btn-xs ${isPin ? "pinned" : ""}" data-pin="${item.code}">${isPin ? "★ Đã ghim" : "☆ Ghim"}</button>
+                  </div>
+                  <div style="font-weight:600;font-size:12.5px;">${highlight(item.vi, state.query)}</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">${highlight(item.en, state.query)}</div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        `;
+      }
+
+      container.querySelectorAll("[data-code]").forEach(el => {
+        el.addEventListener("click", (e) => {
+          if (e.target.closest("[data-copy-code]") || e.target.closest("[data-pin]")) return;
+          state.selectedCode = el.dataset.code;
+          renderResults(items);
+          renderDetail();
+        });
+      });
+
+      container.querySelectorAll("[data-copy-code]").forEach(el => {
+        el.addEventListener("click", (e) => {
+          e.stopPropagation();
+          copyText(el.dataset.copyCode, "Đã copy mã");
+        });
+      });
+
+      container.querySelectorAll("[data-pin]").forEach(el => {
+        el.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const code = el.dataset.pin;
+          if (state.pinned.includes(code)) {
+            state.pinned = state.pinned.filter(c => c !== code);
+            showToast(`Đã bỏ ghim ${code}`);
+          } else {
+            state.pinned.push(code);
+            showToast(`Đã ghim ${code}`);
+          }
+          savePinned();
+          renderAll();
+        });
+      });
+    }
+
+    function renderDetail() {
+      const pane = document.getElementById("detailPane");
+      const item = ICD_DATA.find(i => i.code === state.selectedCode);
+      if (!item) {
+        pane.innerHTML = `<div class="empty">Chọn một mã bệnh để xem chi tiết.</div>`;
+        return;
+      }
+
+      const grp = GROUPS.find(g => g.id === item.group);
+      const isPin = state.pinned.includes(item.code);
+      const isTrauma = item.code.startsWith("S") || item.code.startsWith("T");
+      const related = ICD_DATA.filter(other => other.group === item.group && other.code !== item.code).slice(0, 4);
+
+      pane.innerHTML = `
+        <div class="detail-code-row">
+          <span class="detail-code-big">${escapeHtml(item.code)}</span>
+          <button class="btn-xs ${isPin ? "pinned" : ""}" id="detailPinBtn">${isPin ? "★ Đã ghim" : "☆ Ghim mã"}</button>
+        </div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:3px;">${escapeHtml(item.vi)}</div>
+        <div style="color:var(--muted);font-size:12px;margin-bottom:8px;">${escapeHtml(item.en)}</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Nhóm: <strong>${escapeHtml(grp ? grp.name : item.group)}</strong></div>
+
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+          <button class="btn btn-primary" id="copyCodeOnlyBtn">Copy mã (${escapeHtml(item.code)})</button>
+          <button class="btn" id="copyCodeAndNameBtn">Copy Mã + Tên</button>
+        </div>
+
+        <div class="note-box">
+          <strong>Lưu ý lâm sàng / BHYT:</strong> ${escapeHtml(item.note)}
+        </div>
+
+        ${isTrauma ? `
+          <div class="trauma-box">
+            <strong>Nhắc quy tắc mã Chấn thương:</strong> Kiểm tra phân loại gãy kín/gãy hở theo hồ sơ lâm sàng và cân nhắc bổ sung mã nguyên nhân ngoài (V01–Y98).
+          </div>
+        ` : ""}
+
+        <div style="margin-top:12px;">
+          <div style="font-size:12px;font-weight:700;color:var(--muted);">Mã liên quan cùng nhóm</div>
+          <div class="related-tags">
+            ${related.map(r => `<span class="code-chip" data-jump-code="${r.code}" title="${escapeHtml(r.vi)}">${escapeHtml(r.code)}</span>`).join("")}
+          </div>
+        </div>
+      `;
+
+      document.getElementById("detailPinBtn").addEventListener("click", () => {
+        if (state.pinned.includes(item.code)) {
+          state.pinned = state.pinned.filter(c => c !== item.code);
+          showToast(`Đã bỏ ghim ${item.code}`);
+        } else {
+          state.pinned.push(item.code);
+          showToast(`Đã ghim ${item.code}`);
+        }
+        savePinned();
+        renderAll();
+      });
+
+      document.getElementById("copyCodeOnlyBtn").addEventListener("click", () => copyText(item.code, "Đã copy mã"));
+      document.getElementById("copyCodeAndNameBtn").addEventListener("click", () => copyText(`${item.code} - ${item.vi}`, "Đã copy Mã + Tên"));
+
+      pane.querySelectorAll("[data-jump-code]").forEach(el => {
+        el.addEventListener("click", () => {
+          state.selectedCode = el.dataset.jumpCode;
+          renderAll();
+        });
+      });
+    }
+
+    function exportCsv() {
+      const items = getFilteredItems();
+      const rows = [["Ma_ICD", "Ten_benh_Tieng_Viet", "Ten_benh_Tieng_Anh", "Nhom", "Ghi_chu"]];
+      items.forEach(i => {
+        const grp = GROUPS.find(g => g.id === i.group);
+        rows.push([i.code, i.vi, i.en, grp ? grp.name : i.group, i.note]);
+      });
+      const csvContent = "\uFEFF" + rows
+        .map(r => r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+        .join("\r\n");
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "icd10_tra_cuu.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast(`Đã xuất ${items.length} mã ra CSV`);
+    }
+
+    function renderAll() {
+      const isGuide = state.mode === "guide";
+      document.getElementById("guidePanel").style.display = isGuide ? "block" : "none";
+      document.getElementById("workbench").style.display = isGuide ? "none" : "grid";
+      document.getElementById("searchToolbar").style.display = isGuide ? "none" : "flex";
+
+      if (!isGuide) {
+        renderGroups();
+        const items = getFilteredItems();
+        renderResults(items);
+        renderDetail();
+      }
+    }
+
+    // Events
+    document.querySelectorAll(".nav-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        state.mode = tab.dataset.mode;
+        renderAll();
+      });
+    });
+
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      state.query = e.target.value;
+      renderAll();
+    });
+
+    document.getElementById("clearSearch").addEventListener("click", () => {
+      state.query = "";
+      document.getElementById("searchInput").value = "";
+      renderAll();
+    });
+
+    document.getElementById("resetGroupBtn").addEventListener("click", () => {
+      state.group = "ALL";
+      renderAll();
+    });
+
+    document.getElementById("viewTableBtn").addEventListener("click", () => {
+      state.view = "table";
+      document.getElementById("viewTableBtn").classList.add("active");
+      document.getElementById("viewCardBtn").classList.remove("active");
+      renderAll();
+    });
+
+    document.getElementById("viewCardBtn").addEventListener("click", () => {
+      state.view = "card";
+      document.getElementById("viewCardBtn").classList.add("active");
+      document.getElementById("viewTableBtn").classList.remove("active");
+      renderAll();
+    });
+
+    document.getElementById("btnExportCsv").addEventListener("click", exportCsv);
+
+    // Init
+    savePinned();
+    renderAll();
+  </script>
+</body>
+</html>
